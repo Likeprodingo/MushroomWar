@@ -33,9 +33,9 @@ public class GridBuilding : MonoBehaviour
 
     public void StartPlacingBuilding(Building buildingPrefab)
     {
-        if (!ReferenceEquals(_targetBuilding,null))
+        if (_targetBuilding != null)
         {
-            Destroy(_targetBuilding.gameObject);
+            _targetBuilding.GetComponent<PoolObject>().ReturnToPool();
         }
         _targetBuilding = PoolManager.GetObject(buildingPrefab.name).GetComponent<Building>();
         _collider = _targetBuilding.GetComponentInChildren<CapsuleCollider>();

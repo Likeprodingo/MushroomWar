@@ -36,9 +36,9 @@ public static class PoolManager
                     result.transform.position = position;
                     result.transform.rotation = rotation; 
                     result.SetActive (true);
-                    if (result.GetComponent<EnemyFollow>())
+                    if (result.GetComponent<EnemyScript>())
                     {
-                        result.GetComponent<EnemyFollow>().StartMoving(_player);
+                        result.GetComponent<EnemyScript>().StartMoving(_player);
                     }
                     break;
                 }

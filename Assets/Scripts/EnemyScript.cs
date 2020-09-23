@@ -4,17 +4,19 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
 
-public class EnemyFollow : MonoBehaviour
+public class EnemyScript : MonoBehaviour
 {
     [SerializeField]
     private float _updateTime = 0.5f;
     [SerializeField]
     private NavMeshAgent _navMesh = default;
-    [SerializeField]
     private Transform _player = default;
+    [SerializeField] private float _maxHealth = 100;
+    private float _health;
 
     public void StartMoving(Transform player)
     {
+        _health = _maxHealth;
         _player = player;
         StartCoroutine(Moving());
     }
@@ -27,5 +29,20 @@ public class EnemyFollow : MonoBehaviour
             yield return waiter;
             _navMesh.SetDestination(_player.position);
         }
+    }
+    
+    public void GetDamage(float damage)
+    {
+        _health -= damage;
+        if (_health <= 0)
+        {
+            StartCoroutine(Death());
+        }
+    }
+
+    IEnumerator Death()
+    {
+        yield return new WaitForSeconds(1f);
+        GetComponent<PoolObject>().ReturnToPool();
     }
 }

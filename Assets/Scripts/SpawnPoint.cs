@@ -7,7 +7,6 @@ public class SpawnPoint : MonoBehaviour
 {
     private static readonly List<GameObject> _enemies = new List<GameObject>();
     [SerializeField]
-    private GameObject _wolf = default;
     private readonly Vector3[] _spawnPosition = {
         new Vector3(0,0,0),
         new Vector3(0,0,2),
