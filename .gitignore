@@ -11,6 +11,14 @@
 !*.gitattributes
 !*.lfsconfig
 
+*.meta
+*.cs.meta
+*.pdf.meta
+*.img.meta
+*.jpg.meta
+*.unity.meta
+*.png.meta
+
 /**/LiveOps/.Importer/bin/*
 /**/LiveOps/.Importer/obj/*
 
