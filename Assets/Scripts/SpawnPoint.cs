@@ -25,7 +25,7 @@ public class SpawnPoint : MonoBehaviour
         int i = 0;
         for (; i < WolfCount && i < 5; i++)
         {
-            GameObject enemy = Instantiate(_wolf, transform.position + _spawnPosition[i], transform.rotation,transform);
+            GameObject enemy = PoolManager.GetObject("Wolf", transform.position + _spawnPosition[i], transform.rotation);
             _enemies.Add(enemy);
         }
     }

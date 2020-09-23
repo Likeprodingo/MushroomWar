@@ -12,7 +12,7 @@ public class LevelController : MonoBehaviour
     [SerializeField]
     private Vector3 _spawnDistance = new Vector3(6,0,6);
     [SerializeField]
-    private GameObject _spawnPrefab = default;
+    private const string Spawn = "SpawnPoint";
 
     public float SpawnNumber
     {
@@ -24,7 +24,6 @@ public class LevelController : MonoBehaviour
 
     void Start()
     {
-        
         _spawnDistance.y = 0;
         for (int i = 0; i < _spawnNumber; i++)
         {
@@ -43,13 +42,13 @@ public class LevelController : MonoBehaviour
                     pos.z *= -1;
                     break;
             }
-            GameObject spawn = Instantiate(_spawnPrefab, pos, transform.rotation, transform);
+            GameObject spawn = PoolManager.GetObject(Spawn,pos,transform.rotation);
             spawn.GetComponent<SpawnPoint>().WolfCount = 1;
             _points.Add(spawn);
         }
-        foreach(GameObject point in _points)
+        for(int i = 0; i < _points.Count; i++)
         {
-            point.GetComponent<SpawnPoint>().Spawn();
+            _points[i].GetComponent<SpawnPoint>().Spawn();
         }
     }
 }

@@ -37,8 +37,8 @@ public class Building : MonoBehaviour
     {
         _renderer.material.color = _normalColor;
     }
-    
-    
+
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         for (int x = 0; x < _size.x; x++)
@@ -50,4 +50,6 @@ public class Building : MonoBehaviour
             }
         }
     }
+#endif
+    
 }

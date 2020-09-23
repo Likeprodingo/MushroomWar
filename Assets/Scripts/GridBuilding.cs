@@ -15,7 +15,9 @@ public class GridBuilding : MonoBehaviour
     private Building[,] _grid = default;
     private Building _targetBuilding =default;
     private Camera _mainCamera = default;
-
+    private Building _buildingComponent = default;
+    private CapsuleCollider _collider = default;
+    private Transform _targetTransform = default;
     public Vector2Int GridSize => _gridSize;
 
     public float BuildRange => _buildRange;
@@ -35,8 +37,10 @@ public class GridBuilding : MonoBehaviour
         {
             Destroy(_targetBuilding.gameObject);
         }
-
-        _targetBuilding = Instantiate(buildingPrefab);
+        _targetBuilding = PoolManager.GetObject(buildingPrefab.name).GetComponent<Building>();
+        _collider = _targetBuilding.GetComponentInChildren<CapsuleCollider>();
+        _buildingComponent = _targetBuilding.GetComponent<Building>();
+        _targetTransform = _targetBuilding.transform;
         _targetBuilding.GetComponentInChildren<CapsuleCollider>().enabled = false;
     }
     
@@ -52,35 +56,13 @@ public class GridBuilding : MonoBehaviour
                 Vector3 worldPosition = ray.GetPoint(position);
                 int worldPosX = Mathf.RoundToInt(worldPosition.x);
                 int worldPosZ = Mathf.RoundToInt(worldPosition.z);
-                _targetBuilding.transform.position = worldPosition;
                 Vector3 playerPosition = _player.transform.position;
                 int x = Mathf.RoundToInt(playerPosition.x);
                 int y = Mathf.RoundToInt(playerPosition.z);
-
-                bool available = true;
+                bool available = IsBuildingPossible(worldPosX,worldPosZ,x,y);
                 
-                if ( worldPosX > x + _buildRange)
-                {
-                    available = false;
-                }
-
-                if (
-                    worldPosX < x - _buildRange
-                    ||worldPosX > x + _buildRange
-                    || worldPosX < -_gridSize.x + _targetBuilding.Size.x 
-                    || worldPosX > _gridSize.x - _targetBuilding.Size.x
-                    ||worldPosZ < y - _buildRange 
-                    || worldPosZ < -_gridSize.y + _targetBuilding.Size.y 
-                    || worldPosZ > _gridSize.y - _targetBuilding.Size.y
-                    || worldPosZ > y + _buildRange
-                    || isPlaceTaken(worldPosX, worldPosZ)
-                    )
-                {
-                    available = false;
-                }
-                
-                _targetBuilding.transform.position = new Vector3(worldPosX,_targetBuilding.transform.position.y,worldPosZ);
-                _targetBuilding.GetComponent<Building>().SetTransparent(available);
+                _targetTransform.position = new Vector3(worldPosX,_targetTransform.position.y, worldPosZ);
+                _buildingComponent.SetTransparent(available);
 
                 if (Input.GetMouseButtonDown(0) && available)
                 {
@@ -90,7 +72,19 @@ public class GridBuilding : MonoBehaviour
         }
     }
 
-    private bool isPlaceTaken(int placeX, int placeY)
+    private bool IsBuildingPossible(int worldPosX, int worldPosZ, int x ,int y)
+    {
+        return !(worldPosX < x - _buildRange
+               || worldPosX > x + _buildRange
+               || worldPosX < -_gridSize.x + _targetBuilding.Size.x
+               || worldPosX > _gridSize.x - _targetBuilding.Size.x
+               || worldPosZ < y - _buildRange
+               || worldPosZ < -_gridSize.y + _targetBuilding.Size.y
+               || worldPosZ > _gridSize.y - _targetBuilding.Size.y
+               || worldPosZ > y + _buildRange
+               || IsPlaceTaken(worldPosX, worldPosZ));
+    }
+    private bool IsPlaceTaken(int placeX, int placeY)
     {
         for (int x = 0; x < _targetBuilding.Size.x; x++)
         {
@@ -113,8 +107,8 @@ public class GridBuilding : MonoBehaviour
                 _grid[placeX + _gridSize.x + x, placeY + _gridSize.y + y] = _targetBuilding;
             }
         }
-        _targetBuilding.GetComponentInChildren<CapsuleCollider>().enabled = true;
-        _targetBuilding.GetComponent<Building>().SetNormal();
+        _collider.enabled = true;
+        _buildingComponent.SetNormal();
         _targetBuilding = null;
     }
 }

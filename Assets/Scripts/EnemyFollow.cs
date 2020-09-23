@@ -2,19 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class EnemyFollow : MonoBehaviour
 {
-    private GameObject _player = default;
+    [SerializeField]
+    private float _updateTime = 0.5f;
+    [SerializeField]
     private NavMeshAgent _navMesh = default;
+    [SerializeField]
+    private Transform _player = default;
 
-    void Awake()
+    public void StartMoving(Transform player)
     {
-        _player = GameObject.Find("Player");
-        _navMesh = GetComponent<NavMeshAgent>();
+        _player = player;
+        StartCoroutine(Moving());
     }
-    void Update()
+    
+    IEnumerator Moving()
     {
-        _navMesh.SetDestination(_player.transform.position);
+        var waiter = new WaitForSeconds(_updateTime);
+        while (true)
+        {
+            yield return waiter;
+            _navMesh.SetDestination(_player.position);
+        }
     }
 }
