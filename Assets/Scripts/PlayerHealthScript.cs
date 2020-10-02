@@ -9,7 +9,7 @@ public class PlayerHealthScript : MonoBehaviour
     private float _health;
     [SerializeField]
     private Slider _slider = default;
-
+    
     private void Start()
     {
         _health = _maxHealth;

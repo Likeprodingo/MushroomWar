@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3768209069377356585}
   - component: {fileID: 375694399349112564}
-  - component: {fileID: 9015853079732825159}
   m_Layer: 0
   m_Name: SpawnPoint
   m_TagString: Untagged
@@ -42,18 +41,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1aa64bffa0e0ad48860b3db8cca9d1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _wolf: {fileID: 1413798971682002675, guid: 1fc3acd4a3e0d854b81de98dd5dd1d64, type: 3}
---- !u!114 &9015853079732825159
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8417045664233414268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b37a32641b8b482da2c133a880b27fff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

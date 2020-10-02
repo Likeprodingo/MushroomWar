@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 335113597}
   - component: {fileID: 335113596}
   - component: {fileID: 335113595}
+  - component: {fileID: 335113598}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -302,7 +303,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2023621628}
+      - m_Target: {fileID: 0}
         m_MethodName: StartPlacingBuilding
         m_Mode: 2
         m_Arguments:
@@ -350,6 +351,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 335113593}
   m_CullTransparentMesh: 0
+--- !u!114 &335113598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335113593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0da9c0784bb4a89ac3ff6232a5aa141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _type: 2
 --- !u!1 &336484049
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,7 +530,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1616560934}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &565134921
+--- !u!114 &565134919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -525,11 +539,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 565134918}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9fca4100a7477741b3973b4ff2c405f, type: 3}
+  m_Script: {fileID: 11500000, guid: 105b1f8f02ac0ac41b4266255d41849d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _handleRange: 1
-  _deadZone: 0
   _background: {fileID: 1253385023}
   _handle: {fileID: 72906979}
 --- !u!1 &575970828
@@ -641,7 +653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95b822699693ad748b380e79e7454225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _joystick: {fileID: 565134921}
+  _joystick: {fileID: 565134919}
   _rigidbody: {fileID: 575970834}
   _speed: 5
 --- !u!54 &575970834
@@ -1262,6 +1274,7 @@ GameObject:
   - component: {fileID: 1183616574}
   - component: {fileID: 1183616573}
   - component: {fileID: 1183616575}
+  - component: {fileID: 1183616576}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: Untagged
@@ -1307,23 +1320,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1183616572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6dd3f57f12d42699bb796b59ae1ce5f, type: 3}
+  m_Script: {fileID: 11500000, guid: e0c5c25910fa45169d5558871652e542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 575970832}
-  _pools:
-  - _name: Building
-    _prefab: {fileID: -7210224950261954044, guid: f8dcf3af1cdabc4408e814cd9c3a5214,
+  Pool:
+  - Tag: 2
+    Prefab: {fileID: 5237069529536727300, guid: f8dcf3af1cdabc4408e814cd9c3a5214,
       type: 3}
-    _count: 40
-  - _name: Wolf
-    _prefab: {fileID: 2224790834953693197, guid: 1fc3acd4a3e0d854b81de98dd5dd1d64,
-      type: 3}
-    _count: 20
-  - _name: SpawnPoint
-    _prefab: {fileID: 9015853079732825159, guid: d3c5d5b0e3dc89945a8c693924bc8aaf,
-      type: 3}
-    _count: 4
+    Size: 10
+--- !u!114 &1183616576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183616572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958fad98fea0424fb463de01f1322145, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gridSize: {x: 50, y: 50}
 --- !u!224 &1253385023 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2929252283123773938, guid: aaa2c939c0359ac4dbce3f49e8b90252,
@@ -1808,7 +1826,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2023621627}
-  - component: {fileID: 2023621628}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -1835,17 +1852,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2023621628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2023621626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cd73880b9dab714781ef1235b9b286f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gridSize: {x: 50, y: 50}
-  _buildRange: 3

@@ -88,10 +88,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5237069529536727302}
-  - component: {fileID: 5237069529536727301}
   - component: {fileID: 8644547928341952521}
   - component: {fileID: 8125019597442227579}
-  - component: {fileID: -7210224950261954044}
+  - component: {fileID: 6437470654358762103}
   m_Layer: 0
   m_Name: Building
   m_TagString: Untagged
@@ -114,20 +113,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5237069529536727301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5237069529536727300}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4296f40a536f17c4e845e481d05a7d08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _size: {x: 2, y: 2}
-  _renderer: {fileID: 5237069527740437486}
 --- !u!208 &8644547928341952521
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -158,7 +143,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0.5, y: 0, z: 0.5}
---- !u!114 &-7210224950261954044
+--- !u!114 &6437470654358762103
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -167,6 +152,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5237069529536727300}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b37a32641b8b482da2c133a880b27fff, type: 3}
+  m_Script: {fileID: 11500000, guid: a5ea9fbf2d1341af88d84472efc5128e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _type: 2
+  _putRange: 3
+  _collider: {fileID: 8125019597442227579}
+  _renderer: {fileID: 5237069527740437486}

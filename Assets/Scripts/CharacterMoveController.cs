@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 public class CharacterMoveController : MonoBehaviour
 {
     [SerializeField]
-    private Joystick _joystick = default;
+    private JoyController _joystick = default;
     [SerializeField]
     private Rigidbody _rigidbody = default;
     [SerializeField]

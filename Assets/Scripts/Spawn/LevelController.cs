@@ -41,10 +41,10 @@ public class LevelController : MonoBehaviour
                     pos.x *= -1;
                     pos.z *= -1;
                     break;
-            }
-            GameObject spawn = PoolManager.GetObject(Spawn,pos,transform.rotation);
-            spawn.GetComponent<SpawnPoint>().WolfCount = 1;
-            _points.Add(spawn);
+            } 
+            //GameObject spawn = PoolManager.GetObject(Spawn,pos,transform.rotation);
+            //spawn.GetComponent<SpawnPoint>().WolfCount = 1;
+            //_points.Add(spawn);
         }
         for(int i = 0; i < _points.Count; i++)
         {
