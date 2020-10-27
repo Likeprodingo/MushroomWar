@@ -1,12 +1,11 @@
 using UnityEngine;
 
-namespace Interface
+namespace Inventory
 {
     public class Grid : SceneSingleton<Grid>
     {
-        [SerializeField]
-        private Vector2Int _gridSize = default; 
-        private Item[,] _grid = default;
+        [SerializeField] private Vector2Int _gridSize = default; 
+        private Item[,] _grid;
 
         public Vector2Int GridSize => _gridSize;
 
@@ -19,11 +18,11 @@ namespace Interface
         
         public bool IsPlaceTaken(int placeX, int placeY)
         {
-            if (ReferenceEquals(_grid[placeX + _gridSize.x, placeY + _gridSize.y],null))
+            if (_grid[placeX + _gridSize.x, placeY + _gridSize.y] == null)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
         public void PlaceBuilding(int placeX, int placeY, Item building)
         {

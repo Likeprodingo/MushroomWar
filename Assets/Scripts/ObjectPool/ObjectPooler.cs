@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,12 +6,13 @@ namespace ObjectPool
 {
     public class ObjectPooler : SceneSingleton<ObjectPooler>
     {
-        [SerializeField] private Transform _player;
+        [SerializeField] private Transform _player = default;
            public Dictionary<PoolObjectType, Queue<GameObject>> PoolDictionary;
            public List<PoolObjects> Pool;
            private Dictionary<PoolObjectType, int> _poolIndexes = new Dictionary<PoolObjectType, int>();
            private Dictionary<PoolObjectType, Transform> _poolMasters = new Dictionary<PoolObjectType, Transform>();
-           private void Start()
+           
+           private void Awake()
            {
                PoolDictionary = new Dictionary<PoolObjectType, Queue<GameObject>>();
                GameObject master = new GameObject("Pool");
@@ -42,7 +44,7 @@ namespace ObjectPool
            {
                if (!PoolDictionary.ContainsKey(tag))
                {
-                   Debug.LogWarning("PoolObjects with Tag " + tag + " doesn't exist ..");
+                   Debug.Log("PoolObjects with Tag " + tag + " doesn't exist ..");
                    return null;
                }
                GameObject objToSpawn;
@@ -68,14 +70,13 @@ namespace ObjectPool
                 {
                     objToSpawn.transform.SetParent(parent.transform);
                 }
-
                 return objToSpawn;
             }
 
            public void Despawn(GameObject obj)
            {
                PoolObjectType tag = obj.GetComponent<IPooledObject>().PoolType;
-               if (tag != null && PoolDictionary.ContainsKey(tag))
+               if ( PoolDictionary.ContainsKey(tag))
                {
                    PoolDictionary[tag].Enqueue(obj);
                    IPooledObject iPooledObj = obj.GetComponent<IPooledObject>();

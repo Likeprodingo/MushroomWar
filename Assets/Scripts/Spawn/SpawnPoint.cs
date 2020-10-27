@@ -1,33 +1,59 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Enemy;
 using ObjectPool;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class SpawnPoint : MonoBehaviour
+namespace Spawn
 {
-    
-    [SerializeField] private readonly Vector3[] _spawnPosition = {
-        new Vector3(0,0,0),
-        new Vector3(0,0,2),
-        new Vector3(2,0,0),
-        new Vector3(-2,0,0),
-        new Vector3(0,0,-2),
-    };
-
-    [SerializeField] private PoolObjectType _type = default;
-    private static readonly List<GameObject> _enemies = new List<GameObject>();
-    public static List<GameObject> Enemies => _enemies;
-    public Vector3[] SpawnPosition => _spawnPosition; 
-    public int WolfCount { get; set; } = 0;
-    
-    public void Spawn()
+    public class SpawnPoint : PooledObject
     {
-        int i = 0;
-        for (; i < WolfCount && i < 5; i++)
-        { 
-            //GameObject enemy = PoolManager.GetObject("Wolf", transform.position + _spawnPosition[i], transform.rotation);
-            //_enemies.Add(enemy);
+    
+        [SerializeField] private readonly Vector3[] _spawnPosition = {
+            new Vector3(0,0,0),
+            new Vector3(0,0,2),
+            new Vector3(2,0,0),
+            new Vector3(-2,0,0),
+            new Vector3(0,0,-2),
+        };
+        [SerializeField] private Wave _wave = default;
+        
+        private static readonly List<EnemyScript> Enemies = new List<EnemyScript>();
+        private static int _waveNumber = 0;
+        
+        public Wave Wave
+        {
+            get => _wave;
+            internal set => _wave = value;
+        }
+        
+        public Vector3[] SpawnPosition => _spawnPosition;
+        
+
+        public void EnemyDeath(EnemyScript enemy)
+        {
+            Enemies.Remove(enemy);
+        }
+        public void Spawn()
+        {
+            _waveNumber++;
+            int i = 0;
+            for (; i < _wave.WolfCount && i < 5; i++)
+            { 
+                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Wolf, transform.position + _spawnPosition[i], transform.rotation).GetComponent<EnemyScript>();
+                Enemies.Add(enemy);
+            }
+            
+            for (; i < _wave.OgrCount && i < 5; i++)
+            { 
+                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Ogr, transform.position + _spawnPosition[i], transform.rotation).GetComponent<EnemyScript>();
+                Enemies.Add(enemy);
+            }
+            
+            for (; i < _wave.ShamanCount && i < 5; i++)
+            { 
+                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Shaman, transform.position + _spawnPosition[i], transform.rotation).GetComponent<EnemyScript>();
+                Enemies.Add(enemy);
+            }
         }
     }
 }

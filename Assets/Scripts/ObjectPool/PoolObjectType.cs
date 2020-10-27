@@ -9,6 +9,12 @@ namespace ObjectPool
         Flower,
         FireMushroom,
         ElusiveMushroom,
-        Spawn
+        Spawn,
+        DarkEssence,
+        Essence,
+        HitNumber,
+        FlowerDrop,
+        FireMushroomDrop,
+        ElusiveMushroomDrop
     }
 }

@@ -25,7 +25,7 @@ namespace ObjectPool
 
         public void Despawn()
         {
-           ObjectPooler.Instance.Despawn(this.gameObject);
+           ObjectPooler.Instance.Despawn(gameObject);
         }
     }
 }
