@@ -10,14 +10,12 @@ using Util;
 
 namespace Building
 {
-    public class ElusiveMushroom : Building, IHealth
+    public class ElusiveMushroom : ABuilding, IHealth
     {
         [SerializeField] protected float _maxHealth = 100;
         [SerializeField] private Item _item = default;
         
         private List<EnemyScript> _enemies = new List<EnemyScript>();
-        private IHealth _playerHealthScript;
-        private Transform _player;
         private float _health;
         
         private new void OnEnable()
@@ -31,9 +29,7 @@ namespace Building
         {
             if (other.TryGetComponent(out EnemyScript enemyScript))
             {
-                _player = enemyScript.Player.transform;
-                _playerHealthScript = enemyScript.PlayerHealth;
-                enemyScript.Player = transform;
+                enemyScript.Aim = transform;
                 enemyScript.PlayerHealth = this;
                 _enemies.Add(enemyScript);
             }
@@ -50,7 +46,7 @@ namespace Building
             DamageNumScript damageNumScript = ObjectPooler
                 .Instance
                 .SpawnFromPool(PoolObjectType.HitNumber)
-                .GetComponent<DamageNumScript>();
+                as DamageNumScript;
             damageNumScript.Text.text = damage.ToString();
             damageNumScript.transform.position = transform.position;
             if (_health <= 0)
@@ -66,8 +62,8 @@ namespace Building
             {
                 if (_enemies[i].gameObject.activeSelf)
                 {
-                    _enemies[i].Player = _player;
-                    _enemies[i].PlayerHealth = _playerHealthScript;
+                    _enemies[i].Aim = PlayerHealthScript.Instance.transform;
+                    _enemies[i].PlayerHealth =  PlayerHealthScript.Instance;
                 }
             }
             _item.Despawn();

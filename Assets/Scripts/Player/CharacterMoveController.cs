@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Player
 {
-    public class CharacterMoveController : MonoBehaviour
+    public class CharacterMoveController: MonoBehaviour
     {
         [SerializeField]
         private JoyController _joystick = default;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Util;
 
 public class JoyController : MonoBehaviour, IPointerUpHandler, IDragHandler, IPointerDownHandler
 {
@@ -15,7 +16,7 @@ public class JoyController : MonoBehaviour, IPointerUpHandler, IDragHandler, IPo
     private Vector2 _input = Vector2.zero;
     private Vector2 _position;
     private float _deadZone = 0;
-    
+
     public Vector3 Direction { get; private set; }
     private void Start()
     {
@@ -38,11 +39,14 @@ public class JoyController : MonoBehaviour, IPointerUpHandler, IDragHandler, IPo
 
     public void OnDrag(PointerEventData eventData)
     {
-        Vector2 radius = _background.sizeDelta / 2;
-        _input = (eventData.position - _position) / (radius * canvas.scaleFactor);
-        HandleInput(_input.magnitude, _input.normalized);
-        _handle.anchoredPosition = _input * radius;
-        Direction = _input;
+        if (GameController.IsActive)
+        {
+            Vector2 radius = _background.sizeDelta / 2;
+            _input = (eventData.position - _position) / (radius * canvas.scaleFactor);
+            HandleInput(_input.magnitude, _input.normalized);
+            _handle.anchoredPosition = _input * radius;
+            Direction = _input;
+        }
     }
     
     protected virtual void HandleInput(float magnitude, Vector2 normalised)

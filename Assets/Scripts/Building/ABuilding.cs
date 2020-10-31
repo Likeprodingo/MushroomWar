@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Util;
 
 namespace Building
 {
-    public abstract class Building: MonoBehaviour
+    public abstract class ABuilding: MonoBehaviour
     {
         [SerializeField] protected float _activeTime = default;
         [SerializeField] protected MeshRenderer _renderer = default; 
@@ -33,9 +34,11 @@ namespace Building
             while (CurrentActivation > 0)
             {
                 yield return new WaitForSeconds(1);
-                CurrentActivation -= 1;
+                if (GameController.IsActive)
+                {
+                    CurrentActivation -= 1;
+                }
             }
-
             var material = _renderer.material;
             Color color = material.color;
             color.b /= 1.7f;

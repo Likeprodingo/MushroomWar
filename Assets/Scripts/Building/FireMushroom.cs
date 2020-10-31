@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Enemy;
 using UnityEngine;
+using Util;
 
 namespace Building
 {
-    public class FireMushroom : Building
+    public class FireMushroom : ABuilding
     {
 
         [SerializeField] private float _damage = 1f;
@@ -27,9 +28,10 @@ namespace Building
         
         private void OnTriggerExit(Collider other)
         {
-            if (other.tag.Equals("Enemy"))
+            ;
+            if (other.TryGetComponent<EnemyScript>( out EnemyScript enemyScript))
             {
-                _enemies.Remove(other.GetComponent<EnemyScript>());
+                _enemies.Remove(enemyScript);
             }
         }
 
@@ -38,21 +40,23 @@ namespace Building
             _isActive = true;
             while (_enemies.Count != 0 && CurrentActivation > 0)
             {
-                for (int i = 0; i < _enemies.Count; i++)
+                if (GameController.IsActive)
                 {
-                    if (_enemies[i].gameObject.activeSelf == false)
+                    for (int i = 0; i < _enemies.Count; i++)
                     {
-                        _removeEnemies.Add(_enemies[i]);
+                        if (_enemies[i].gameObject.activeSelf == false)
+                        {
+                            _removeEnemies.Add(_enemies[i]);
+                        }
+                        _enemies[i].GetDamage(_damage);
                     }
-                    _enemies[i].GetDamage(_damage);
-                }
 
-                for (int i = 0; i < _removeEnemies.Count; i++)
-                {
-                    _enemies.Remove(_removeEnemies[i]);
+                    for (int i = 0; i < _removeEnemies.Count; i++)
+                    {
+                        _enemies.Remove(_removeEnemies[i]);
+                    }
+                    _removeEnemies = new List<EnemyScript>();
                 }
-
-                _removeEnemies = new List<EnemyScript>();
                 yield return new WaitForSeconds(1.1f);
             }
 

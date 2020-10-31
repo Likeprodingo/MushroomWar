@@ -15,6 +15,8 @@ namespace ObjectPool
         HitNumber,
         FlowerDrop,
         FireMushroomDrop,
-        ElusiveMushroomDrop
+        ElusiveMushroomDrop,
+        DarkEssenceDrop,
+        EssenceDrop,
     }
 }

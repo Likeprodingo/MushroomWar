@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Inventory
 {
-    public class Inventory : SceneSingleton<Inventory>
+    public class InventoryScript : SceneSingleton<InventoryScript>
     {
         [SerializeField] private Slot[] _slots;
         
@@ -15,19 +15,18 @@ namespace Inventory
             {
                 _slots[i].gameObject.SetActive(false);
             }
-            
-            
-            AddItem(ObjectPooler.Instance.SpawnFromPool(PoolObjectType.FlowerDrop)
-                .GetComponent<DropScript>());
-            AddItem(ObjectPooler.Instance.SpawnFromPool(PoolObjectType.FireMushroomDrop)
-                .GetComponent<DropScript>());
+            ObjectPooler.Instance.SpawnFromPool(PoolObjectType.FlowerDrop);
+            ObjectPooler.Instance.SpawnFromPool(PoolObjectType.FireMushroomDrop);
+            ObjectPooler.Instance.SpawnFromPool(PoolObjectType.DarkEssence);
         }
 
-        public void AddItem(DropScript dropScript)
+        public void AddItem(Item item)
         {
+            item.gameObject.SetActive(false);
+            Debug.Log(item.PoolType + "попали");
             for (int i = 0; i < _slots.Length; i++)
             {
-                if (_slots[i].Drop != null && _slots[i].Drop.Type == dropScript.Type)
+                if (_slots[i].Item != null && _slots[i].Item.PoolType == item.PoolType)
                 {
                     _slots[i].Add();
                     return;
@@ -36,13 +35,15 @@ namespace Inventory
 
             for (int i = 0; i < _slots.Length; i++)
             {
-                if (_slots[i].Drop == null)
+                if (_slots[i].Item == null)
                 {
+                    Debug.Log(item.PoolType + "добавляемся");
                     _slots[i].gameObject.SetActive(true);
-                    _slots[i].Drop = dropScript;
+                    _slots[i].Item = item;
                     break;
                 }
             }
         }
+        
     }
 }

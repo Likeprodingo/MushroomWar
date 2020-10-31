@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Enemy;
 using UnityEngine;
+using Util;
 
 namespace Building
 {
-    public class Flower : Building
+    public class Flower : ABuilding
     {
         [SerializeField] private float _damage = 100f;
         [SerializeField] private float _coolDownTime = 1f;
@@ -22,8 +23,6 @@ namespace Building
                 StartCoroutine(Attack());
             }
         }
-
-        
         
         private void OnTriggerExit(Collider other)
         {
@@ -33,13 +32,15 @@ namespace Building
             }
         }
         
-        
         protected override IEnumerator Attack()
         {
             yield return new WaitForSeconds(_coolDownTime);
-            while (!ReferenceEquals(_enemy,null) && _enemy.gameObject.activeSelf == true && CurrentActivation > 0)
+            while (!ReferenceEquals(_enemy,null) && _enemy.gameObject.activeSelf && CurrentActivation > 0)
             {
-                _enemyScript.GetDamage(_damage);
+                if (GameController.IsActive)
+                {
+                    _enemyScript.GetDamage(_damage);
+                }
                 yield return new WaitForSeconds(_coolDownTime);
             }
             _enemy = null;

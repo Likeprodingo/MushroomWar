@@ -39,19 +39,19 @@ namespace Spawn
             int i = 0;
             for (; i < _wave.WolfCount && i < 5; i++)
             { 
-                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Wolf, transform.position + _spawnPosition[i], transform.rotation).GetComponent<EnemyScript>();
+                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Wolf, transform.position + _spawnPosition[i], transform.rotation) as EnemyScript;
                 Enemies.Add(enemy);
             }
             
             for (; i < _wave.OgrCount && i < 5; i++)
             { 
-                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Ogr, transform.position + _spawnPosition[i], transform.rotation).GetComponent<EnemyScript>();
+                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Ogr, transform.position + _spawnPosition[i], transform.rotation) as EnemyScript;
                 Enemies.Add(enemy);
             }
             
             for (; i < _wave.ShamanCount && i < 5; i++)
             { 
-                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Shaman, transform.position + _spawnPosition[i], transform.rotation).GetComponent<EnemyScript>();
+                EnemyScript enemy = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Shaman, transform.position + _spawnPosition[i], transform.rotation) as EnemyScript;
                 Enemies.Add(enemy);
             }
         }

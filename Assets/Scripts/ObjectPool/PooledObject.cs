@@ -4,7 +4,6 @@ namespace ObjectPool
 {
     public class PooledObject : MonoBehaviour, IPooledObject
     {
-        public Transform Player { get; set; }
         public PoolObjectType PoolType { get; set; }
         
 
@@ -25,7 +24,7 @@ namespace ObjectPool
 
         public void Despawn()
         {
-           ObjectPooler.Instance.Despawn(gameObject);
+           ObjectPooler.Instance.Despawn(this);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Building;
+using Inventory;
 using ObjectPool;
 using Player;
 using UnityEngine;
@@ -29,23 +30,9 @@ namespace Drop
         {
             if (other.TryGetComponent(out PlayerHealthScript player))
             {
-                Inventory.Inventory.Instance.AddItem(this);
+                Item item = ObjectPooler.Instance.SpawnFromPool(Type) as Item;
+                InventoryScript.Instance.AddItem(item);
                 Despawn();
-                return;
-            }
-            
-            if (Type == PoolObjectType.DarkEssence && other.TryGetComponent(out ProducerScript producerScript))
-            {
-                StartCoroutine(producerScript.ProduceEssence(this));
-            }
-            
-            if (Type == PoolObjectType.Essence && other.TryGetComponent(out Building.Building building)) //TODO Building.Building?????
-            {
-                if ((building.transform.position - transform.position).magnitude < 1.3f) //TODO сделать так чтобы ближайшее определяло
-                {
-                    building.AddEssence();
-                    Despawn();
-                }
             }
         }
     }

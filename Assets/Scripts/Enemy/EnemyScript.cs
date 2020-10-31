@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Drop;
 using ObjectPool;
 using Player;
 using Spawn;
@@ -13,18 +14,26 @@ namespace Enemy
 
     public class EnemyScript : PooledObject
     {
-        [SerializeField] protected float _updateTime = 0.5f;
-        [SerializeField] protected NavMeshAgent _navMesh = default;
-        [SerializeField] protected float _maxHealth = 100;
-        [SerializeField] protected float _attackRange = 3f;
-        [SerializeField] protected float _damage = 1f;
-        [SerializeField] protected float _health = default;
-        [SerializeField] protected float _coolDownTime = 1f;
-        [SerializeField] protected float _coolDown = 1f;
-        [SerializeField] protected float _attackRate = 0.25f;
-        [SerializeField] protected SpawnPoint _spawnPoint = default;
+        [SerializeField] private float _updateTime = 0.5f;
+        [SerializeField] private NavMeshAgent _navMesh = default;
+        [SerializeField] private float _maxHealth = 100;
+        [SerializeField] private float _attackRange = 3f;
+        [SerializeField] private float _damage = 1f;
+        [SerializeField] private float _coolDownTime = 1f;
+        [SerializeField] private float _coolDown = 1f;
+        [SerializeField] private float _attackRate = 0.25f;
+        [SerializeField] private SpawnPoint _spawnPoint = default;
+        private Transform _aim;
         private IHealth _playerHealth;
         private bool _alive = true;
+        private float _health = default;
+
+
+        public Transform Aim
+        {
+            get => _aim;
+            set => _aim = value;
+        }
 
         public IHealth PlayerHealth
         {
@@ -40,7 +49,8 @@ namespace Enemy
         
         public override void Init()
         {
-            _playerHealth = Player.gameObject.GetComponent<PlayerHealthScript>();
+            _playerHealth = PlayerHealthScript.Instance.gameObject.GetComponent<PlayerHealthScript>();
+            _aim = PlayerHealthScript.Instance.transform;
             _health = _maxHealth;
         }
 
@@ -55,23 +65,30 @@ namespace Enemy
             while (true)
             {
                 yield return waiter;
-                if (PlayerInRange() && _coolDown >= _coolDownTime)
+                if (!GameController.IsActive)
                 {
-                    _coolDown = 0;
-                    StartCoroutine(Attack());
+                    _navMesh.SetDestination(transform.position);
                 }
                 else
                 {
-                    _navMesh.SetDestination(Player.position);
-                }
+                    if (PlayerInRange() && _coolDown >= _coolDownTime)
+                    {
+                        _coolDown = 0;
+                        StartCoroutine(Attack());
+                    }
+                    else
+                    {
+                        _navMesh.SetDestination(_aim.position);
+                    }
 
-                _coolDown += _attackRate;
+                    _coolDown += _attackRate;
+                }
             }
         }
 
         private bool PlayerInRange()
         {
-            return (Player.position - transform.position).magnitude <= _attackRange;
+            return (_aim.position - transform.position).magnitude <= _attackRange;
         }
 
         public void GetDamage(float damage)
@@ -80,7 +97,7 @@ namespace Enemy
             DamageNumScript damageNumScript = ObjectPooler
                 .Instance
                 .SpawnFromPool(PoolObjectType.HitNumber)
-                .GetComponent<DamageNumScript>();
+                as DamageNumScript;
             damageNumScript.Text.text = damage.ToString();
             damageNumScript.transform.position = transform.position;
             if (_health <= 0 && _alive)
@@ -113,10 +130,10 @@ namespace Enemy
             PoolObjectType type = PoolObjectType.FlowerDrop;
             int dropCount = Random.Range(1, 3);
             int dropIndex;
-            GameObject drop;
+            DropScript drop;
             for (int i = 0; i < dropCount; i++)
             {
-                dropIndex = Random.Range(0, 2);
+                dropIndex = Random.Range(0, 6);
                 if (dropIndex == 0)
                 {
                     dropIndex = Random.Range(0, 9);
@@ -131,12 +148,11 @@ namespace Enemy
                           type = PoolObjectType.ElusiveMushroomDrop;
                           break;
                     }
-                    drop = ObjectPooler.Instance.SpawnFromPool(type,transform.position);
+                    drop = ObjectPooler.Instance.SpawnFromPool(type,transform.position) as DropScript;
                 }
                 else
                 {
-                    dropIndex = Random.Range(50, 100);
-                    drop = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.DarkEssence, transform.position);
+                    drop = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.DarkEssenceDrop, transform.position) as DropScript;
                 }
             }
         }

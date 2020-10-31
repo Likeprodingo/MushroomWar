@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Util;
 using Image = UnityEngine.UI.Image;
 
 
@@ -20,7 +21,20 @@ namespace Inventory
         private int _count = 0;
         private Item _item;
         private bool isActive =false;
-        
+
+        public Item Item
+        {
+            get => _item;
+            set 
+            { 
+                Debug.Log(value.PoolType + "устанавливаемся");
+                _count = 1;
+                _item = value;
+                _image.sprite = value.Sprite;
+            }
+            
+        }
+
         public int Count
         {
             get => _count;
@@ -31,18 +45,7 @@ namespace Inventory
         {
             _camera = Camera.main;
         }
-
-        public DropScript Drop
-        {
-            get => _drop;
-            set
-            {
-                _count = 1;
-                _drop = value;
-                _image.sprite = value.Sprite;
-            }
-        }
-
+        
         public void Add()
         {
             _count++;
@@ -56,7 +59,7 @@ namespace Inventory
             }
             if (_count == 0)
             {
-                _drop = null;
+                _item = null;
                 _image.sprite = null;
                 gameObject.SetActive(false);
             }
@@ -64,10 +67,9 @@ namespace Inventory
         
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (_drop)
+            if (_item && GameController.IsActive)
             {
-                _item = ObjectPooler.Instance.SpawnFromPool(_drop.Type).GetComponent<Item>();
-                
+                _item.gameObject.SetActive(true);
                 isActive = true;
                 StartCoroutine(PlacingItem());
             }
@@ -86,7 +88,7 @@ namespace Inventory
                 return false;
             }
 
-            if (_drop.Type != PoolObjectType.Essence && _drop.Type != PoolObjectType.DarkEssence && Grid.Instance.IsPlaceTaken(worldPosX,worldPosY))
+            if (_item.PoolType != PoolObjectType.Essence && _item.PoolType != PoolObjectType.DarkEssence && Grid.Instance.IsPlaceTaken(worldPosX,worldPosY))
             {
                 return false;
             }

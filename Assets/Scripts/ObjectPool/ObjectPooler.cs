@@ -6,59 +6,55 @@ namespace ObjectPool
 {
     public class ObjectPooler : SceneSingleton<ObjectPooler>
     {
-        [SerializeField] private Transform _player = default;
-           public Dictionary<PoolObjectType, Queue<GameObject>> PoolDictionary;
+            public Dictionary<PoolObjectType, Queue<PooledObject>> PoolDictionary;
            public List<PoolObjects> Pool;
            private Dictionary<PoolObjectType, int> _poolIndexes = new Dictionary<PoolObjectType, int>();
            private Dictionary<PoolObjectType, Transform> _poolMasters = new Dictionary<PoolObjectType, Transform>();
            
            private void Awake()
            {
-               PoolDictionary = new Dictionary<PoolObjectType, Queue<GameObject>>();
+               PoolDictionary = new Dictionary<PoolObjectType, Queue<PooledObject>>();
                GameObject master = new GameObject("Pool");
                for (int j = 0; j < Pool.Count; j++)
                {
                    GameObject poolSpecifiMaster = new GameObject(Pool[j].Tag.ToString());
                    poolSpecifiMaster.transform.parent = master.transform;
-                   Queue<GameObject> objectPool = new Queue<GameObject>();
+                   Queue<PooledObject> objectPool = new Queue<PooledObject>();
                    _poolIndexes.Add(Pool[j].Tag, j);
                    _poolMasters.Add(Pool[j].Tag, poolSpecifiMaster.transform);
                    for (int i = 0; i < Pool[j].Size; i++)
                    {
                        GameObject obj = Instantiate(Pool[j].Prefab);
                        obj.transform.parent = poolSpecifiMaster.transform;
-                       IPooledObject iPool = obj.GetComponent<IPooledObject>();
+                       PooledObject iPool = obj.GetComponent<PooledObject>();
                        if (iPool == null)
                        {
-                           PooledObject temp = obj.AddComponent<PooledObject>();
-                           iPool = temp;
+                           iPool = obj.AddComponent<PooledObject>();
                        }
                        iPool.PoolType = Pool[j].Tag;
                        obj.SetActive(false);
-                       objectPool.Enqueue(obj);
+                       objectPool.Enqueue(iPool);
                    }
                    PoolDictionary.Add(Pool[j].Tag, objectPool);
                }
            }
-           public GameObject SpawnFromPool(PoolObjectType tag, Vector3 pos = default, Quaternion rot = default, GameObject parent = null)
+           public PooledObject SpawnFromPool(PoolObjectType tag, Vector3 pos = default, Quaternion rot = default, GameObject parent = null)
            {
                if (!PoolDictionary.ContainsKey(tag))
                {
                    Debug.Log("PoolObjects with Tag " + tag + " doesn't exist ..");
                    return null;
                }
-               GameObject objToSpawn;
+               PooledObject objToSpawn;
                 if (PoolDictionary[tag].Count != 0)
                 {
                     objToSpawn = PoolDictionary[tag].Peek();
-                    objToSpawn.SetActive(true);
-                    objToSpawn.transform.position = pos;
-                    objToSpawn.transform.rotation = rot;
-                    IPooledObject iPooledObj = objToSpawn.GetComponent<IPooledObject>();
-                    iPooledObj.Player = _player;
-                    iPooledObj.Init();
-                    iPooledObj.OnObjectSpawn();
-
+                    objToSpawn.gameObject.SetActive(true);
+                    var transform1 = objToSpawn.transform;
+                    transform1.position = pos;
+                    transform1.rotation = rot;
+                    objToSpawn.Init();
+                    objToSpawn.OnObjectSpawn();
                     PoolDictionary[tag].Dequeue();
                 }
                 else
@@ -73,15 +69,14 @@ namespace ObjectPool
                 return objToSpawn;
             }
 
-           public void Despawn(GameObject obj)
+           public void Despawn(PooledObject obj)
            {
                PoolObjectType tag = obj.GetComponent<IPooledObject>().PoolType;
                if ( PoolDictionary.ContainsKey(tag))
                {
-                   PoolDictionary[tag].Enqueue(obj);
-                   IPooledObject iPooledObj = obj.GetComponent<IPooledObject>();
-                   if (iPooledObj != null) iPooledObj.OnObjectDespawn();
-                   obj.SetActive(false);
+                   PoolDictionary[tag].Enqueue(obj); 
+                   obj.OnObjectDespawn();
+                   obj.gameObject.SetActive(false);
                }
                else
                {
@@ -89,28 +84,25 @@ namespace ObjectPool
                }
            }
 
-           private GameObject ExpandPool(PoolObjectType tag, Vector3 pos, Quaternion rot)
+           private PooledObject ExpandPool(PoolObjectType tag, Vector3 pos, Quaternion rot)
            {
                int index = _poolIndexes[tag];
-               GameObject temp = Instantiate(Pool[index].Prefab);
+               GameObject temp = Instantiate(Pool[index].Prefab, _poolMasters[tag], true);
                temp.SetActive(true);
-               temp.transform.SetParent(_poolMasters[tag]);
                temp.transform.position = pos;
                temp.transform.rotation = rot;
-               IPooledObject iPool = temp.GetComponent<IPooledObject>();
+               PooledObject iPool = temp.GetComponent<PooledObject>();
                if (iPool == null)
                {
-                   PooledObject tempPool = temp.AddComponent<PooledObject>();
-                   iPool = tempPool;
+                   iPool = temp.AddComponent<PooledObject>();
                }
                iPool.PoolType = tag;
-               iPool.Player =  _player;
                iPool.Init();
                iPool.OnObjectSpawn();
-               PoolDictionary[tag].Enqueue(temp);
+               PoolDictionary[tag].Enqueue(iPool);
                PoolDictionary[tag].Dequeue();
                Pool[index].Size++;
-               return temp;
+               return iPool;
             }
     }
 }

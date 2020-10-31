@@ -32,7 +32,7 @@ namespace Spawn
                         break;
                 }
 
-                SpawnPoint spawn = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Spawn,pos,transform.rotation,gameObject).GetComponent<SpawnPoint>();
+                SpawnPoint spawn = ObjectPooler.Instance.SpawnFromPool(PoolObjectType.Spawn,pos,transform.rotation,gameObject) as SpawnPoint;
                 spawn.Wave = new Wave(2,0,0);
                 spawn.Spawn();
                 _points.Add(spawn);

@@ -5,7 +5,7 @@ using Util;
 
 namespace Player
 {
-    public class PlayerHealthScript: MonoBehaviour,IHealth
+    public class PlayerHealthScript: SceneSingleton<PlayerHealthScript>,IHealth
     {
         [SerializeField] protected float _maxHealth = 100;
         [SerializeField] private Slider _slider = default;
